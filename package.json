@@ -5,9 +5,9 @@
   "type": "module",
   "author": "Julius Ossim",
   "bugs": {
-    "url": "https://github.com/bigyanpoudel/react-vite-library/issues"
+    "url": "https://github.com/julius-ossim/embeddable/issues"
   },
-  "homepage": "https://github.com/bigyanpoudel/react-vite-library#readme",
+  "homepage": "https://github.com/julius-ossim/embeddable#readme",
   "license": "MIT",
   "exports": {
     ".": {
