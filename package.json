@@ -12,10 +12,10 @@
   "exports": {
     ".": {
       "import": "./dist/atunwa-player.es.js",
-      "require": "./dist/atunwa-player.umd.js"
+      "require": "./dist/atunwa-player.cjs.js"
     }
   },
-  "main": "./dist/atunwa-player.umd.js",
+  "main": "./dist/atunwa-player.cjs.js",
   "module": "./dist/atunwa-player.es.js",
   "typings": "./dist/index.d.ts",
   "files": [

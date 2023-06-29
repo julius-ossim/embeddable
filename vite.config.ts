@@ -14,7 +14,7 @@ export default defineConfig({
         lib: {
             entry: path.resolve(__dirname, 'src/lib/index.ts'),
             name: 'atunwaPlayer',
-            formats: ['es', 'umd'],
+            formats: ['es', 'cjs'],
             fileName: (format) => `atunwa-player.${format}.js`,
         },
         rollupOptions: {
