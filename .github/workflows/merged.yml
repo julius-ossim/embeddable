@@ -10,7 +10,6 @@ on:
 jobs:
 
   build:
-    needs: test
     name: Build Application
     runs-on: ubuntu-latest
     steps:
