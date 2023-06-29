@@ -1,45 +1,30 @@
-import { defineConfig } from "vite";
-
-
-import typescript from '@rollup/plugin-typescript';
-import path from "path";
-import { typescriptPaths } from "rollup-plugin-typescript-paths";
-
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
-  plugins: [],
-  resolve: {
-    alias: [
-      {
-        find: "~",
-        replacement: path.resolve(__dirname, "./src"),
-      },
+    plugins: [
+        react(),
+        dts({
+            insertTypesEntry: true,
+        }),
     ],
-  },
-  server: {
-    port: 3000,
-  },
-  build: {
-    manifest: true,
-    minify: true,
-    reportCompressedSize: true,
-    lib: {
-      entry: path.resolve(__dirname, "src/main.tsx"),
-      fileName: "main",
-      formats: ["es", "cjs"],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, 'src/lib/index.ts'),
+            name: 'atunwaPlayer',
+            formats: ['es', 'umd'],
+            fileName: (format) => `atunwa-player.${format}.js`,
+        },
+        rollupOptions: {
+            external: ['react', 'react-dom', 'styles'],
+            output: {
+                globals: {
+                    react: 'React',
+                    'react-dom': 'ReactDOM',
+                },
+            },
+        },
     },
-    rollupOptions: {
-      external: [],
-      plugins: [
-        typescriptPaths({
-          preserveExtensions: true,
-        }),
-        typescript({
-          sourceMap: false,
-          declaration: true,
-          outDir: "dist",
-        }),
-      ],
-    },
-  },
 });
