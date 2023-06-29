@@ -1,0 +1,95 @@
+name: Merged CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+      - uat
+      - main
+
+jobs:
+
+  build:
+    needs: test
+    name: Build Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🔄 Clone repository"
+        uses: actions/checkout@v2
+
+      - name: "🔧 Setup Node"
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: "📦 Install dependencies"
+        run: npm install
+
+      - name: "🚀 Build dist"
+        run: npm run build
+
+      - name: "💾 Upload artifact"
+        uses: actions/upload-artifact@v1
+        with:
+          name: dist
+          path: dist
+
+  deploy-dev:
+    needs: build
+    name: Deploy to Dev Server
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🔽 Download artifact"
+        uses: actions/download-artifact@v1
+        with:
+          name: dist
+
+      - name: "🚀 Deploy dist to Dev server"
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: "."
+          target: "/var/www/frontend/player"
+
+  deploy-uat:
+    needs: build
+    name: Deploy to UAT Server
+    if: github.ref == 'refs/heads/uat'
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🔽 Download artifact"
+        uses: actions/download-artifact@v1
+        with:
+          name: dist
+
+      - name: "🚀 Deploy dist to UAT server"
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.UAT_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: "."
+          target: "/var/www/frontend/player"
+
+  deploy-prod:
+    needs: build
+    name: Deploy to Prod Server
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🔽 Download artifact"
+        uses: actions/download-artifact@v1
+        with:
+          name: dist
+
+      - name: "🚀 Deploy dist to Prod server"
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: "."
+          target: "/var/www/frontend/player"
